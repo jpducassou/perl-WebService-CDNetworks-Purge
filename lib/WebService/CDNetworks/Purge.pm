@@ -1,4 +1,4 @@
-package Net::CDNetworks::Purge;
+package WebService::CDNetworks::Purge;
 
 use strict;
 use warnings;
