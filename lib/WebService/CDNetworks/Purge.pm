@@ -3,13 +3,15 @@ package WebService::CDNetworks::Purge;
 use strict;
 use warnings;
 
+use Carp;
 use Try::Tiny;
-use Data::Dumper;
 use URI::Escape;
 use JSON;
 use LWP::UserAgent;
 
 use Moose;
+
+my $MAX_PATHS_PER_CALL = 1000;
 
 has 'baseURL' => (
 	is       => 'ro',
@@ -37,23 +39,24 @@ has 'password' => (
 	required => 1
 );
 
-sub list {
+sub listPADs {
 
 	my ($self) = @_;
 
-	my $username = uri_escape($self -> username);
-	my $password = uri_escape($self -> password);
-	my $operation = 'padList';
+	my $requestPayload = {
+		'output' => 'json',
+		'user'   => $self -> username,
+		'pass'   => $self -> password,
+	};
 
-	my $url = $self -> baseURL . "/$operation?output=json&user=$username&pass=$password";
+	my $url = $self -> baseURL . '/padList';
+	$url .= '?' . join '&', map { $_ . '=' . uri_escape($requestPayload -> {$_}) } keys %$requestPayload;
 
 	my $ua = $self -> ua;
 	$ua -> timeout(10);
 	$ua -> env_proxy;
 
 	my $response = $ua -> get($url);
-
-	warn '[DEBUG]: status line: ' . $response -> status_line;
 
 	unless ($response -> is_success) {
 		die $response -> status_line;
@@ -65,8 +68,58 @@ sub list {
 		die 'Invalid $json -> {resultCode}: ' . ($json -> {'resultCode'} || '<undef>');
 	}
 
-# print Dumper($json);
 	return $json -> {'pads'};
+
+}
+
+sub purgeItems {
+
+	my ($self, $pad, $paths) = @_;
+
+	unless ($pad) {
+		croak 'No pad given!';
+	}
+
+	unless ($paths && ref($paths) && ref($paths) eq 'ARRAY') {
+		croak 'Invalid paths given';
+	}
+
+	if (scalar (@$paths) == 0) {
+		croak 'Zero paths given!';
+	}
+
+	if (scalar (@$paths) > $MAX_PATHS_PER_CALL) {
+		croak 'Too many path given!';
+	}
+
+	my $requestPayload = {
+		'output' => 'json',
+		'user'   => $self -> username,
+		'pass'   => $self -> password,
+		'type'   => 'item',
+		'pad'    => $pad,
+		'path'   => $paths,
+	};
+
+	my $url = $self -> baseURL . '/doPurge';
+
+	my $ua = $self -> ua;
+	$ua -> timeout(10);
+	$ua -> env_proxy;
+
+	my $response = $ua -> post($url, $requestPayload);
+
+	unless ($response -> is_success) {
+		die $response -> status_line;
+	}
+
+	my $json = decode_json($response -> decoded_content);
+
+	unless ($json -> {'resultCode'} && $json -> {'resultCode'} == 200) {
+		die 'Invalid $json -> {resultCode}: ' . ($json -> {'resultCode'} || '<undef>');
+	}
+
+	return $json -> {'pid'};
 
 }
 
