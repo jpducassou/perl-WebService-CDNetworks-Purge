@@ -85,7 +85,8 @@ sub purgeItems {
 	}
 
 	if (scalar (@$paths) == 0) {
-		croak 'Zero paths given!';
+		carp 'Zero paths given!';
+		return;
 	}
 
 	if (scalar (@$paths) > $MAX_PATHS_PER_CALL) {
