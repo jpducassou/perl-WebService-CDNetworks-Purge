@@ -117,7 +117,7 @@ sub purgeItems {
 	my $json = decode_json($response -> decoded_content);
 
 	unless ($json -> {'resultCode'} && $json -> {'resultCode'} == 200) {
-		die 'Invalid $json -> {resultCode}: ' . ($json -> {'resultCode'} || '<undef>');
+		die 'Error [' . $json -> {'resultCode'} . ']: ' . $json -> {'details'};
 	}
 
 	return $json -> {'pid'};
