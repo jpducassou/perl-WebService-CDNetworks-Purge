@@ -11,8 +11,6 @@ use LWP::UserAgent;
 
 use Moose;
 
-my $MAX_PATHS_PER_CALL = 1000;
-
 has 'baseURL' => (
 	is       => 'ro',
 	isa      => 'Str',
@@ -37,6 +35,12 @@ has 'password' => (
 	is       => 'ro',
 	isa      => 'Str',
 	required => 1
+);
+
+has 'pathsPerCall' => (
+	is       => 'rw',
+	isa      => 'Int',
+	default  => sub { return 1000; },
 );
 
 sub listPADs {
@@ -89,7 +93,7 @@ sub purgeItems {
 		return;
 	}
 
-	if (scalar (@$paths) > $MAX_PATHS_PER_CALL) {
+	if (scalar (@$paths) > $self -> pathsPerCall) {
 		croak 'Too many path given!';
 	}
 
