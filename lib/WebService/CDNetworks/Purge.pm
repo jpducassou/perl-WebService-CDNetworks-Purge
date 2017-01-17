@@ -103,11 +103,7 @@ sub _purgeItems {
 
 	my $json = decode_json($response -> decoded_content);
 
-	unless ($json -> {'resultCode'} && $json -> {'resultCode'} == 200) {
-		croak 'Error [' . $json -> {'resultCode'} . ']: ' . $json -> {'details'};
-	}
-
-	return $json -> {'pid'};
+	return $json;
 
 }
 

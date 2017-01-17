@@ -75,11 +75,76 @@ subtest 'Happy path' => sub {
 	} 'Contructor expecting to live';
 
 	isa_ok($service, 'WebService::CDNetworks::Purge');
+	my $expected = [{
+		'details' => 'item rest flush (2 items)',
+		'notice'  => '',
+		'paths'   => [
+			'/a.html',
+			'/images/b.png'
+		],
+		'pid'        => 666,
+		'resultCode' => 200,
+	}];
 
 	my $purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
-	is_deeply($purgeStatus, [ 666 ], 'purgeItems returned the right id');
+	is_deeply($purgeStatus, $expected, 'purgeItems returned the right id');
 
 	$useragent -> unmap_all('true');
+	$useragent -> map_response(
+		sub {
+			my $request = shift;
+			return 1 if ($request -> content =~ /path=%2Fa\.html/);
+		},
+		HTTP::Response -> new('200', 'OK', ['Content-Type' => 'text/plain;charset=UTF-8'], '{
+  "details": "item rest flush (1 item)",
+  "notice": "",
+  "paths": [
+    "/a.html"
+  ],
+  "pid": 1,
+  "resultCode": 200
+}')
+	);
+	$useragent -> map_response(
+		sub {
+			my $request = shift;
+			return 1 if ($request -> content =~ /path=%2Fimages%2Fb\.png/);
+		},
+		HTTP::Response -> new('200', 'OK', ['Content-Type' => 'text/plain;charset=UTF-8'], '{
+  "details": "item rest flush (1 item)",
+  "notice": "",
+  "paths": [
+    "/images/b.png"
+  ],
+  "pid": 2,
+  "resultCode": 200
+}')
+	);
+
+	$expected = [
+		{
+			'details' => 'item rest flush (1 item)',
+			'notice' => '',
+			'paths' => [
+				'/a.html'
+			],
+			'pid' => 1,
+			'resultCode' => 200,
+		},
+		{
+			'details' => 'item rest flush (1 item)',
+			'notice' => '',
+			'paths' => [
+				'/images/b.png'
+			],
+			'pid' => 2,
+			'resultCode' => 200,
+		}
+	];
+
+	$service -> pathsPerCall(1);
+	$purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
+	is_deeply($purgeStatus, $expected, 'purgeItems returned the right status');
 
 	done_testing();
 
