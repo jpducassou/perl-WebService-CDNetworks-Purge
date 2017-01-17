@@ -76,26 +76,9 @@ sub listPADs {
 
 }
 
-sub purgeItems {
+sub _purgeItems {
 
 	my ($self, $pad, $paths) = @_;
-
-	unless ($pad) {
-		croak 'No pad given!';
-	}
-
-	unless ($paths && ref($paths) && ref($paths) eq 'ARRAY') {
-		croak 'Invalid paths given';
-	}
-
-	if (scalar (@$paths) == 0) {
-		carp 'Zero paths given!';
-		return;
-	}
-
-	if (scalar (@$paths) > $self -> pathsPerCall) {
-		croak 'Too many path given!';
-	}
 
 	my $requestPayload = {
 		'output' => 'json',
@@ -125,6 +108,39 @@ sub purgeItems {
 	}
 
 	return $json -> {'pid'};
+
+}
+
+sub purgeItems {
+
+	my ($self, $pad, $paths) = @_;
+
+	unless ($pad) {
+		croak 'No pad given!';
+	}
+
+	unless ($paths && ref($paths) && ref($paths) eq 'ARRAY') {
+		croak 'Invalid paths given!';
+	}
+
+	if (scalar (@$paths) == 0) {
+		carp 'Zero paths given!';
+		return;
+	}
+
+	my $status;
+	my $statuses = [];
+
+	while (scalar (@$paths) > $self -> pathsPerCall) {
+		my @payload = splice(@$paths, 0, $self -> pathsPerCall);
+		$status = $self -> _purgeItems($pad, \@payload);
+		push @$statuses, $status;
+	}
+
+	$status = $self -> _purgeItems($pad, $paths);
+	push @$statuses, $status;
+
+	return $statuses;
 
 }
 
