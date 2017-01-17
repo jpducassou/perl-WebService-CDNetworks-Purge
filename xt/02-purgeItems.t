@@ -96,7 +96,7 @@ subtest 'Happy path' => sub {
 			return 1 if ($request -> content =~ /path=%2Fa\.html/);
 		},
 		HTTP::Response -> new('200', 'OK', ['Content-Type' => 'text/plain;charset=UTF-8'], '{
-  "details": "item rest flush (1 item)",
+  "details": "item rest flush (1 items)",
   "notice": "",
   "paths": [
     "/a.html"
@@ -111,7 +111,7 @@ subtest 'Happy path' => sub {
 			return 1 if ($request -> content =~ /path=%2Fimages%2Fb\.png/);
 		},
 		HTTP::Response -> new('200', 'OK', ['Content-Type' => 'text/plain;charset=UTF-8'], '{
-  "details": "item rest flush (1 item)",
+  "details": "item rest flush (1 items)",
   "notice": "",
   "paths": [
     "/images/b.png"
@@ -123,7 +123,7 @@ subtest 'Happy path' => sub {
 
 	$expected = [
 		{
-			'details' => 'item rest flush (1 item)',
+			'details' => 'item rest flush (1 items)',
 			'notice' => '',
 			'paths' => [
 				'/a.html'
@@ -132,7 +132,7 @@ subtest 'Happy path' => sub {
 			'resultCode' => 200,
 		},
 		{
-			'details' => 'item rest flush (1 item)',
+			'details' => 'item rest flush (1 items)',
 			'notice' => '',
 			'paths' => [
 				'/images/b.png'
