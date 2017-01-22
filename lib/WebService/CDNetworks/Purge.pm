@@ -140,5 +140,40 @@ sub purgeItems {
 
 }
 
+sub status {
+
+	my ($self, $pid) = @_;
+
+	my $requestPayload = {
+		'output' => 'json',
+		'user'   => $self -> username,
+		'pass'   => $self -> password,
+		'pid'    => $pid,
+	};
+
+	my $url = $self -> baseURL . '/status';
+	$url .= '?' . join '&', map { $_ . '=' . uri_escape($requestPayload -> {$_}) } keys %$requestPayload;
+
+	my $ua = $self -> ua;
+	$ua -> timeout(10);
+	$ua -> env_proxy;
+
+	my $response = $ua -> get($url);
+
+	unless ($response -> is_success) {
+		die $response -> status_line;
+	}
+
+	my $json = decode_json($response -> decoded_content);
+
+	unless ($json -> {'resultCode'} && $json -> {'resultCode'} == 200) {
+		die 'Invalid $json -> {resultCode}: ' . ($json -> {'resultCode'} || '<undef>');
+	}
+
+	return $json;
+
+}
+
+
 __PACKAGE__ -> meta -> make_immutable;
 1;

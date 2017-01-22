@@ -9,9 +9,9 @@ use Getopt::Long;
 
 use WebService::CDNetworks::Purge;
 
-sub list {
+sub status {
 
-	my ($username, $password) = @_;
+	my ($username, $password, $pid) = @_;
 
 	my $purger = WebService::CDNetworks::Purge -> new({
 		'username' => $username,
@@ -19,9 +19,9 @@ sub list {
 	});
 
 	try {
-		print Dumper($purger -> listPADs());
+		print Dumper($purger -> status($pid));
 	} catch {
-		die 'Error listing PADs. Exception: ' . $_;
+		die 'Error getting status. Exception: ' . $_;
 	};
 
 }
@@ -30,13 +30,15 @@ sub main {
 
 	my $username;
 	my $password;
+	my $pid;
 
 	GetOptions(
 		'username=s' => \$username,
 		'password=s' => \$password,
+		'pid=s'      => \$pid,
 	) or die('Error in command line arguments!');
 
-	list($username, $password);
+	status($username, $password, $pid);
 
 }
 
