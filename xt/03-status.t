@@ -1,12 +1,13 @@
+#!/usr/bin/env perl
+
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 1;
 use Test::Exception;
-use Test::NoWarnings 1.04 ':early';
 use Test::LWP::UserAgent;
 
-use_ok('WebService::CDNetworks::Purge');
+use WebService::CDNetworks::Purge;
 
 subtest 'Happy path' => sub {
 
