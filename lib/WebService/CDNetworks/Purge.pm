@@ -7,10 +7,6 @@ use warnings;
 
 WebService::CDNetworks::Purge - A client for the CDNetworks's Cache Flush Open API
 
-=head1 VERSION
-
-Version 0.10
-
 =head1 SYNOPSIS
 
 	my $service = WebService::CDNetworks::Purge -> new({

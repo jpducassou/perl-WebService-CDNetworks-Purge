@@ -5,6 +5,10 @@ include   = NamingConventions ClassHierarchies Subroutines::ProhibitExcessComple
 exclude   = Variables  Modules::RequirePackage  Subroutines::RequireArgUnpacking  Subroutines::ProhibitBuiltinHomonyms NamingConventions::Capitalization
 color     = 1
 
+[Documentation::RequirePodSections]
+lib_sections	  = NAME | SYNOPSIS | DESCRIPTION | AUTHOR | LICENSE
+script_sections	= NAME | SYNOPSIS | DESCRIPTION | AUTHOR | LICENSE
+
 [TestingAndDebugging::RequireUseStrict]
 severity = 5
 
@@ -16,7 +20,4 @@ severity = 5
 
 [Subroutines::ProhibitSubroutinePrototypes]
 severity = 5
-
-[Bangs::ProhibitCommentedOutCode]
-[Bangs::ProhibitFlagComments]
 
