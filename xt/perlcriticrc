@@ -19,3 +19,4 @@ severity = 5
 
 [Bangs::ProhibitCommentedOutCode]
 [Bangs::ProhibitFlagComments]
+
