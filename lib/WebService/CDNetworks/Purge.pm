@@ -22,6 +22,8 @@ WebService::CDNetworks::Purge - A client for the CDNetworks's Cache Flush Open A
 
 =cut
 
+our $VERSION = '0.20';
+
 use Carp;
 use Try::Tiny;
 use URI::Escape;
