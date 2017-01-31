@@ -110,13 +110,9 @@ sub listPADs {
 
 }
 
-=head2 _purgeItems
-
-Description: private method used to purge a single chunk of paths from cache
-Parameters: PAD/domain and an arrayref with the list of paths to purge
-Returns: A hash ref with the parsed JSON response from service
-
-=cut
+# Description: private method used to purge a single chunk of paths from cache
+# Parameters: PAD/domain and an arrayref with the list of paths to purge
+# Returns: A hash ref with the parsed JSON response from service
 
 sub _purgeItems {
 

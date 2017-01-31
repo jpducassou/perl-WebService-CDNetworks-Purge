@@ -23,12 +23,6 @@ Description: get the list of domains (or PADs) handled by user
 Parameters: none
 Returns: an array ref with the list of domains/PADs
 
-## \_purgeItems
-
-Description: private method used to purge a single chunk of paths from cache
-Parameters: PAD/domain and an arrayref with the list of paths to purge
-Returns: A hash ref with the parsed JSON response from service
-
 ## purgeItems
 
 Description: Purges for a certain PAD/domain a list of paths.
