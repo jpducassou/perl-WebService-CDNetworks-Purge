@@ -9,10 +9,10 @@ WebService::CDNetworks::Purge - A client for the CDNetworks's Cache Flush Open A
 
 =head1 SYNOPSIS
 
-	my $service = WebService::CDNetworks::Purge -> new({
+	my $service = WebService::CDNetworks::Purge -> new(
 		'username' => 'xxxxxxxx',
 		'password' => 'yyyyyyyy',
-	});
+	);
 
 	my $listOfPADs = $service -> listPADs();
 

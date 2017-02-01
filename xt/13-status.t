@@ -28,11 +28,11 @@ subtest 'Happy path' => sub {
 	} qr/Attribute \(\w+\) is required at constructor/, 'constructor called without credentials';
 
 	lives_ok {
-		$service = WebService::CDNetworks::Purge -> new({
+		$service = WebService::CDNetworks::Purge -> new(
 			'username' => 'xxxxxxxx',
 			'password' => 'yyyyyyyy',
 			'ua'       => $useragent,
-		});
+		);
 	} 'Contructor expecting to live';
 
 	isa_ok($service, 'WebService::CDNetworks::Purge');
