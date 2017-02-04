@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Exception;
 use Test::LWP::UserAgent;
 
@@ -130,7 +130,13 @@ subtest 'Happy path' => sub {
 	my $purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
 	is_deeply($purgeStatus, $expected, 'purgeItems returned the right id');
 
-	$useragent -> unmap_all('true');
+	done_testing();
+
+};
+
+subtest 'Happy path' => sub {
+
+	my $useragent = Test::LWP::UserAgent -> new();
 	$useragent -> map_response(
 		sub {
 			my $request = shift;
@@ -162,7 +168,13 @@ subtest 'Happy path' => sub {
 }')
 	);
 
-	$expected = [
+	my $service = WebService::CDNetworks::Purge -> new(
+		'username' => 'xxxxxxxx',
+		'password' => 'yyyyyyyy',
+		'ua'       => $useragent,
+	);
+
+	my $expected = [
 		{
 			'details' => 'item rest flush (1 items)',
 			'notice' => '',
@@ -184,7 +196,7 @@ subtest 'Happy path' => sub {
 	];
 
 	$service -> pathsPerCall(1);
-	$purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
+	my $purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
 	is_deeply($purgeStatus, $expected, 'purgeItems returned the right result');
 
 	done_testing();
