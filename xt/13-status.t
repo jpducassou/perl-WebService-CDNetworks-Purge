@@ -11,9 +11,7 @@ use WebService::CDNetworks::Purge;
 
 subtest 'Happy path' => sub {
 
-	my $service;
 	my $useragent = Test::LWP::UserAgent -> new();
-
 	$useragent -> map_response(
 		qr{https://openapi.us.cdnetworks.com/purge/rest/status\?.*pid=666},
 		HTTP::Response -> new('200', 'OK', ['Content-Type' => 'text/plain;charset=UTF-8'], '{
@@ -23,19 +21,11 @@ subtest 'Happy path' => sub {
 	}')
 	);
 
-	throws_ok {
-		$service = WebService::CDNetworks::Purge -> new({});
-	} qr/Attribute \(\w+\) is required at constructor/, 'constructor called without credentials';
-
-	lives_ok {
-		$service = WebService::CDNetworks::Purge -> new(
-			'username' => 'xxxxxxxx',
-			'password' => 'yyyyyyyy',
-			'ua'       => $useragent,
-		);
-	} 'Contructor expecting to live';
-
-	isa_ok($service, 'WebService::CDNetworks::Purge');
+	my $service = WebService::CDNetworks::Purge -> new(
+		'username' => 'xxxxxxxx',
+		'password' => 'yyyyyyyy',
+		'ua'       => $useragent,
+	);
 
 	my $status = $service -> status(666);
 	my $expected = {
