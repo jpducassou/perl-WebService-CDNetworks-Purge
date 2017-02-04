@@ -9,7 +9,7 @@ use Test::LWP::UserAgent;
 
 use WebService::CDNetworks::Purge;
 
-subtest 'Not success' => sub {
+subtest 'Not found' => sub {
 
 	my $useragent = Test::LWP::UserAgent -> new();
 	my $service = WebService::CDNetworks::Purge -> new(

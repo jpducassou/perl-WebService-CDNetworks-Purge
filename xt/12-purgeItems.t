@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 use Test::Exception;
 use Test::LWP::UserAgent;
 
@@ -34,7 +34,62 @@ subtest 'Preconditions' => sub {
 		$service -> purgeItems('test.example.com', '/a.html');
 	} qr/Invalid paths given/, 'Invalid paths given';
 
+	lives_ok {
+		local $SIG{__WARN__} = sub { like($_[0], qr/Zero paths given/, 'Carp ok'); };
+		is($service -> purgeItems('test.example.com', []), undef);
+	} 'Zero paths given';
+
 	done_testing();
+
+};
+
+subtest 'Not found' => sub {
+
+	my $useragent = Test::LWP::UserAgent -> new();
+	my $service = WebService::CDNetworks::Purge -> new(
+		'username' => 'xxxxxxxx',
+		'password' => 'yyyyyyyy',
+		'ua'       => $useragent,
+	);
+
+	throws_ok {
+		my $purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
+	} qr/404 Not Found/, 'URL not found';
+
+};
+
+subtest 'result code not 200' => sub {
+
+	my $useragent = Test::LWP::UserAgent -> new();
+	$useragent -> map_response(
+		qr{https://openapi.us.cdnetworks.com/purge/rest/doPurge},
+		HTTP::Response -> new('200', 'OK', ['Content-Type' => 'text/plain;charset=UTF-8'], '{
+		"pid": -1,
+		"details": "Internal server error",
+		"paths": [],
+		"resultCode": 500
+	}')
+	);
+
+	my $service = WebService::CDNetworks::Purge -> new(
+		'username' => 'xxxxxxxx',
+		'password' => 'yyyyyyyy',
+		'ua'       => $useragent,
+	);
+
+	my $expected = [{
+		'details' => 'Internal server error',
+		'paths'   => [],
+		'pid'        => -1,
+		'resultCode' => 500,
+	}];
+
+	my $purgeStatus;
+	lives_ok {
+		$purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
+	} 'Service status not 200';
+
+	is_deeply($purgeStatus, $expected, 'purgeItems returned the result');
 
 };
 
@@ -130,7 +185,7 @@ subtest 'Happy path' => sub {
 
 	$service -> pathsPerCall(1);
 	$purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
-	is_deeply($purgeStatus, $expected, 'purgeItems returned the right status');
+	is_deeply($purgeStatus, $expected, 'purgeItems returned the right result');
 
 	done_testing();
 
