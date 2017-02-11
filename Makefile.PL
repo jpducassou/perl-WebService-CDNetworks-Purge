@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-
+use 5.008008;
 
 use ExtUtils::MakeMaker;
 
@@ -14,6 +14,7 @@ my %WriteMakefileArgs = (
   },
   "DISTNAME" => "WebService-CDNetworks-Purge",
   "LICENSE" => "perl",
+  "MIN_PERL_VERSION" => "5.008008",
   "NAME" => "WebService::CDNetworks::Purge",
   "PREREQ_PM" => {
     "Carp" => 0,

@@ -3,6 +3,8 @@ package WebService::CDNetworks::Purge;
 use strict;
 use warnings;
 
+use 5.8.8;
+
 =head1 NAME
 
 WebService::CDNetworks::Purge - A client for the CDNetworks's Cache Flush Open API
