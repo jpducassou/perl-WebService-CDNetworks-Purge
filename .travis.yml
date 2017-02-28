@@ -15,6 +15,9 @@ install:
   - dzil listdeps   --author --missing | xargs -n 5 -P 10 cpanm --quiet --notest
 
 script:
-  - export AUTOMATED_TESTING=1 NONINTERACTIVE_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=c HARNESS_TIMER=1
+  - export NONINTERACTIVE_TESTING=1
+  - export AUTOMATED_TESTING=1
+  - export AUTHOR_TESTING=1
+  - export RELEASE_TESTING=1
   - dzil smoke --release --author
 
