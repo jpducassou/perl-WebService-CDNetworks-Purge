@@ -17,7 +17,6 @@ install:
 script:
   - export NONINTERACTIVE_TESTING=1
   - export AUTOMATED_TESTING=1
-  - export AUTHOR_TESTING=1
-  - export RELEASE_TESTING=1
-  - dzil smoke --release --author
+  - dzil test
+  - dzil xtest
 
