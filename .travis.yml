@@ -19,4 +19,3 @@ script:
   - export AUTOMATED_TESTING=1
   - dzil test
   - dzil xtest
-
