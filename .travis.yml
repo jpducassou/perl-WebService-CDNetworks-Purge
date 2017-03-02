@@ -12,10 +12,10 @@ perl:
 install:
   - cpanm --quiet --notest --skip-satisfied Dist::Zilla
   - dzil authordeps --missing | xargs -n 5 -P 10 cpanm --quiet --notest
-  - dzil listdeps --develop --author --missing | xargs -n 5 -P 10 cpanm --quiet --notest
+  - dzil listdeps   --missing | xargs -n 5 -P 10 cpanm --quiet --notest
 
 script:
   - export NONINTERACTIVE_TESTING=1
   - export AUTOMATED_TESTING=1
   - dzil test
-  - dzil xtest
+
