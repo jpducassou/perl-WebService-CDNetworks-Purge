@@ -2,6 +2,10 @@
 
 WebService::CDNetworks::Purge - A client for the CDNetworks's Cache Flush Open API
 
+<div>
+    <a href="https://travis-ci.org/jpducassou/perl-WebService-CDNetworks-Purge"><img src="https://travis-ci.org/jpducassou/perl-WebService-CDNetworks-Purge.svg?branch=master"></a>
+</div>
+
 # SYNOPSIS
 
         my $service = WebService::CDNetworks::Purge -> new(
