@@ -50,6 +50,12 @@ has 'ua' => (
 	default  => sub { LWP::UserAgent -> new() }
 );
 
+has 'timeout' => (
+	is       => 'ro',
+	isa      => 'Int',
+	default  => sub { return 10; }
+);
+
 has 'username' => (
 	is       => 'ro',
 	isa      => 'Str',
@@ -95,7 +101,7 @@ sub listPADs {
 	$url .= '?' . join '&', map { $_ . '=' . uri_escape($requestPayload -> {$_}) } keys %$requestPayload;
 
 	my $ua = $self -> ua;
-	$ua -> timeout(10);
+	$ua -> timeout($self -> timeout);
 	$ua -> env_proxy;
 
 	my $response = $ua -> get($url);
@@ -134,7 +140,7 @@ sub _purgeItems {
 	my $url = $self -> baseURL . '/doPurge';
 
 	my $ua = $self -> ua;
-	$ua -> timeout(10);
+	$ua -> timeout($self -> timeout);
 	$ua -> env_proxy;
 
 	my $response = $ua -> post($url, $requestPayload);
@@ -214,7 +220,7 @@ sub status {
 	$url .= '?' . join '&', map { $_ . '=' . uri_escape($requestPayload -> {$_}) } keys %$requestPayload;
 
 	my $ua = $self -> ua;
-	$ua -> timeout(10);
+	$ua -> timeout($self -> timeout);
 	$ua -> env_proxy;
 
 	my $response = $ua -> get($url);
