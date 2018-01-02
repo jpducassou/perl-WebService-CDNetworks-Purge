@@ -18,9 +18,11 @@ WebService::CDNetworks::Purge - A client for the CDNetworks's Cache Flush Open A
 		'password' => 'yyyyyyyy',
 	);
 
-	my $listOfPADs = $service -> listPADs();
+	$service -> location('Korea');
 
-	my $purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
+	my $listOfPADs    = $service -> listPADs();
+
+	my $purgeStatus   = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
 
 	my $updatedStatus = $service -> status($purgeStatus -> [0] -> {'pid'}); 
 
@@ -36,10 +38,18 @@ use LWP::UserAgent;
 
 use Moose;
 
+my $locations = {
+	'default' => 'https://openapi.us.cdnetworks.com/purge/rest',
+	'us'      => 'https://openapi.us.cdnetworks.com/purge/rest',
+	'korea'   => 'https://openapi.us.cdnetworks.com/purge/rest',
+	'japan'   => 'https://openapi.jp.cdnetworks.com/purge/rest',
+	'china'   => 'https://openapi.txnetworks.cn/purge/rest',
+};
+
 has 'baseURL' => (
-	is       => 'ro',
+	is       => 'rw',
 	isa      => 'Str',
-	default  => sub { 'https://openapi.us.cdnetworks.com/purge/rest' }
+	default  => sub { $locations -> {'default'} }
 );
 
 has 'ua' => (
@@ -74,10 +84,25 @@ has 'pathsPerCall' => (
 	default  => sub { return 1000; },
 );
 
-
 =head1 METHODS
 
 =cut
+
+=head2 location
+
+Description: Set the base URL attribute based on a location (US, Korea, etc)
+Paramters: The location string
+Returns: none
+
+=cut
+
+sub location {
+
+	my ($self, $location) = @_;
+	croak 'No location given!' unless $location;
+
+	$self -> baseURL($locations -> {$location} || $locations -> {'default'});
+}
 
 =head2 listPADs
 

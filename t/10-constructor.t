@@ -1,14 +1,18 @@
 #!/usr/bin/env perl
 
+# ============================================================================
 use strict;
 use warnings;
 
+# ============================================================================
 use Test::More tests => 2;
 use Test::Exception;
 use Test::LWP::UserAgent;
 
+# ============================================================================
 use WebService::CDNetworks::Purge;
 
+# ============================================================================
 subtest 'Invalid contructor parameters' => sub {
 
 	throws_ok {

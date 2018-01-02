@@ -13,13 +13,21 @@ WebService::CDNetworks::Purge - A client for the CDNetworks's Cache Flush Open A
                 'password' => 'yyyyyyyy',
         );
 
-        my $listOfPADs = $service -> listPADs();
+        $service -> location('Korea');
 
-        my $purgeStatus = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
+        my $listOfPADs    = $service -> listPADs();
+
+        my $purgeStatus   = $service -> purgeItems('test.example.com', ['/a.html', '/images/b.png']);
 
         my $updatedStatus = $service -> status($purgeStatus -> [0] -> {'pid'}); 
 
 # METHODS
+
+## location
+
+Description: Set the base URL attribute based on a location (US, Korea, etc)
+Paramters: The location string
+Returns: none
 
 ## listPADs
 
